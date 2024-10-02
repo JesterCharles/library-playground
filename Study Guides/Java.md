@@ -230,3 +230,177 @@ import java.util.Scanner;
 - **Use Debugging Tools**: Many development environments come with debugging tools like Visual Studio Code and Eclipse. These tools can pause execution and inspect data values line by line
 - **Automated Tests**: Automated tests and other unit tests are performed to check if the actual output matches the expected output. This is done by writing test scripts where we execute the software with specific input
 - **Ask for Help**: If you have tried everything to find the bug and resolve it but nothing is working, you need to ask someone for help. Asking for help often yields a solution you might not have considered before
+
+## Methods
+
+### Method Declaration & Syntax
+A **method** is a block of reusable code with three key parts: the **method name**, which is a unique identifier, the **method parameters**, which are variables passed inside the parentheses and used within the method, and the **return type**, which is the data type returned by the method. For example, in the method 
+```java
+int addNumbers(int num1, int num2){
+  return num1 + num2
+}
+``` 
+"addNumbers" is the **method name**, `num1` and `num2` are the** method parameters**, and `int` is the **return type**, indicating a whole-number value must be returned. If no value needs to be returned, the `void` keyword is used. The standard naming convention for **methods** is to make the name an action and to use camelCase notation
+
+### Method Invocation
+The following class has a method that will return the sum of two integers:
+```java
+public class Main{
+  public static void main(String[] args){
+
+  }
+  int addNumbers(int num1, int num2){
+    return num1 + num2
+  }
+}
+```
+to actually use the method an object of the Main class has to be instantiated, and then the **dot operator** used to call the method:
+```java
+public class Main{
+  public static void main(String[] args){
+    Main obj = new Main();
+    obj.addNumbers(1,2);
+  }
+  int addNumbers(int num1, int num2){
+    return num1 + num2
+  }
+}
+```
+
+### Method Visibility Modifiers
+An optional addition for creating methods is adding a **visibility modifier**. These keywords are used to control where the methods you create can be accessed:
+|modifier|access|
+|-------|-------|
+|public|anywhere|
+|protected|within same package and sub-classes|
+|default (no keyword)|within same package|
+|private|within same class|
+```java
+// this method can only be used in the class where it is defined
+private int addNumbers(int num1, int num2){
+  return num1 + num2
+}
+```
+
+### Method Scope
+Methods can exist in one of two scopes: the **instance scope** and the **class scope**. Methods exist in the **Instance Scope** by default: they are accessed using the dot operator with an instantiated object:
+```java
+Main main = new Main();
+main.addNumbers(2,3);
+```
+Methods can also exist in the **class scope** by adding the **static** key word to the method. This makes the method belong to the class instead of the objects of the class, so internally they can be referenced directly, and outside of the class they are referenced using the dot operator and the Class:
+```java
+public class Main{
+  public static int addNumbers(int num1, int num2){
+    return num1 + num2;
+  }
+  public static void main(String[] args){
+    addNumbers(1,2);
+  }
+}
+```
+```java
+public class App{
+  public static void main(String[] args){
+    Main.addNumbers(1,2);
+  }
+}
+```
+
+### The Stack & Heap
+When running an application, the JVM divides memory into **stack** and **heap memory**. When we declare new variables, objects, call methods, or perform similar operations, the JVM allocates memory from either **Stack Memory** or **Heap Space**
+
+**Stack Memory** in Java is used for static memory allocation and thread execution. It contains primitive values specific to a method and references to objects in the heap. Access is in **Last-In-First-Out (LIFO)** order. A new block is created on top of the stack for each method call, containing method-specific values. When the method finishes, its stack frame is flushed, and space becomes available for the next method. Stack memory grows and shrinks with method calls, is automatically allocated and deallocated, and is threadsafe. If full, Java throws `java.lang.StackOverFlowError`
+
+**Heap Space** is used for dynamic memory allocation of Java objects and JRE classes at runtime. New objects are created in heap space, with references stored in stack memory. Objects in heap space have global access, meaning as long as there are references to the object it can be accessed. If heap space is full, Java throws `java.lang.OutOfMemoryError`. Access to heap memory is slower than stack memory, and it requires a **Garbage Collector** for deallocation. Unlike stack memory, heap memory is not threadsafe and needs proper synchronization
+
+### Method Recursion
+Because methods are references to reusable code, you can call a method within itself: this is called **method recursion**:
+```java
+public int overEngineeredCounter(int current, int target){
+  if (current <= target){
+    System.out.println(current);
+    overEngineeredCounter(++current, target);
+  }
+}
+```
+The method above calls the `overEngineeredCounter` method recursively to print the values of current until it prints the target value, then it ceases calling itself
+
+## Types
+
+### Wrapper Classes
+**Wrapper classes** are the object versions of primitives. There are many methods that require the use of objects for them to function; **wrapper classes** allow primitives to be passed in as arguments for those methods. Java can handle much of this logic for you through the use of **autoboxing**. **Autoboxing** is Java's ability to convert a primitive to its class form, called **boxing**, and converting an object version of a primitive into its primitive form, called **unboxing**
+```java
+public static void main(String[] args){
+    int x = 5;
+    needObject(x)// will print 10, x will be boxed into its wrapper class
+}
+public static void needObject(Integer num){
+    System.out.print(num + 5);
+}
+```
+
+### Strings
+**Strings** are immutable objects in Java. They have a pool (**string pool**) in the heap that allows for multiple references to point to the same **String** object. This makes them work a little differently from other objects
+```java
+// these two strings point to the same object in memory, return true when the .equals() method is called
+String myString = "this is a valid way of declaring a string";
+String myStringTwo = "this is a valid way of declaring a string";
+System.out.println(myString.equals(myStringTwo)); // returns true
+
+// using the new keyword will create a new instance of the string in the pool
+String myString = "this is a valid way of declaring a string";
+String myStringTwo = new String("this is a valid way of declaring a string");
+System.out.println(myString.equals(myStringTwo)); // returns true, compares content
+System.out.println(myString == myStringTwo);// returns false, compares memory location of objects 
+```
+If you need to make changes to a **String** like object you can use a **StringBuilder** instead. **StringBuilder** objects have access to many helper methods, such as `append`, `replace`, `reverse`, and `delete`. These methods and the others in **StringBuilder** affect the object in place instead of requiring a whole new object to be made. If you need a thread safe option you can use a **StringBuffer** instead of a **StringBuilder**
+| Class | Immutable? | Thread-safe? | Speed |
+| ----  | ---------- | ------------ | ----- |
+| String | Y | Y | Slowest |
+| StringBuilder | N | N | Fastest |
+| StringBuffer | N | Y | Fast |
+
+## Exception hierarchy
+![Exception Hierarchy](ExceptionHierarchy.jpg)
+## Exception Handling/Declaring
+Java throws exceptions when they occur. If no code is provided to handle the exception it will go all the way to the JVM and the JVM will terminate the program. You can handle exceptions as the developer by using try/catch blocks, similar to if/else blocks. This is called handling. You can also "duck" or declare exceptions by adding a throws clause to your method signature. This allows you to throw checked exceptions without catching it in the method
+```java
+// try to be specific with exceptions when possible
+public static void duckMethod() throws Exception{
+
+}
+```
+## Custom Exceptions
+You can create custom exceptions relatively easily. Create a class, extend either exception or runtime exception (or a more specific exception) add a constructor that has a message parameter, and in the constructor call super(argument). You're done
+```java
+class MyCheckedException extends Exception{
+    public MyCheckedException(String message){
+        super(message);
+    }
+}
+class MyUncheckedException extends RuntimeException{
+    public MyUncheckedException(String message){
+        super(message);
+    }
+}
+```
+## Checked vs Unchecked Exceptions
+checked exceptions need to be in try catch blocks, unchecked do not. If you add throws to a method signature you can list any checked exceptions and throw them without a try catch block.
+```java
+try{
+    throw new MyCheckedException("this message shows when the exception is thrown");
+} catch (MyCheckedException exception){
+    exception.printStackTrace();
+} finally{
+    // Anything you want to happen, whether an exception is caught or not, can go in a finally block
+}
+
+if (2 > 1){
+    throw new MyUncheckedException("you don't need to handle this with a try catch");
+}
+
+public static void throwsMethod() throws MyCheckedException{
+    throw new MyCheckedException("I can do this without a try catch block");
+}
+```
