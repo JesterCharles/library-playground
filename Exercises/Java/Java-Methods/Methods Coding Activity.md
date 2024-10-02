@@ -44,13 +44,16 @@ public class CaseConverter {
         String input = "exampleVariableName";
         String initialCase = "camel";
         String targetCase = "snake_case";
+
+        CaseConverter converter = new CaseConverter();
         
-        String result = convertCase(input, initialCase, targetCase);
+        String result = converter.convertCase(input, initialCase, targetCase);
         System.out.println("Converted Variable: " + result);
     }
 
-    public static String convertCase(String input, String initialCase, String targetCase) {
+    public String convertCase(String input, String initialCase, String targetCase) {
         // implementation goes here
+        return null;
     }
 
 }
