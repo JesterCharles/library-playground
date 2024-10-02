@@ -31,6 +31,11 @@ public class OuterAccessModifiers {
 
         Private privateObject = new Private("This is a private String");
 //        System.out.println(privateObject.privateString);
+
+        // we can make our SubclassOfProtected object, but in this main method we can not directly access its protected fields
+        SubclassOfProtected subclassOfProtectedObject = new SubclassOfProtected("This is a protected String", 200);
+//        System.out.println(subclassOfProtectedObject.protectedString);
+//        System.out.println(subclassOfProtectedObject.protectedInt);
     }
 
 }

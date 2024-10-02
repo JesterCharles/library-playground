@@ -1,8 +1,9 @@
 package pack;
 
 /*
-    Notice this class is in the default scope: classes can be public, private, or default scope,
-    not protected. The exception to this rule is if a class is defined inside of another class
+    Notice this class is in the default scope: classes can be public or default scope,
+    not protected or private. The exception to this rule is if a class is defined inside
+    of another class
  */
 class Default {
     // default scope resources can be accessed in the same package
