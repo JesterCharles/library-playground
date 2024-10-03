@@ -6,6 +6,7 @@ package inheritance.abstractt;
  */
 
 public abstract class Pet {
+    // all classes that inherit Pet will have access to these fields
     public String species;
     public int age;
     public String name;
@@ -18,6 +19,7 @@ public abstract class Pet {
         this.name = name;
     }
 
+    // since this method behavior is shared we can define the implementation here
     public void ageUp(){
         age++;
         System.out.println(name + " is now " + age);
