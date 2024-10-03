@@ -404,3 +404,374 @@ public static void throwsMethod() throws MyCheckedException{
     throw new MyCheckedException("I can do this without a try catch block");
 }
 ```
+
+## Java Class
+
+### Introduction to OOP
+Although Java accommodates several paradigms, **Object Oriented Programming (OOP)** is the foundation for most Java applications. In **OOP**, a program is organized into objects encapsulating related fields (representing its **state**) and methods (representing the class's **behavior**). When defining objects, Java reserves the keyword **`class`** (not to be confused with the **.class** file extension) which serves as their blueprint. An object in Java represents an instance in memory of a class, and also every class implicitly inherits from the **Object** superclass which provides useful convenience methods such as **equals()** and **toString()**. Java popularized several 'Pillars' of **OOP** design theory. While the numbers vary between OOP languages, Java focuses on four:
+
+- **Abstraction** By simplifying objects to a set of useful features, we hide irrelevant details, reduce complexity, and increase efficiency. Abstraction is important at all levels of software and computer engineering, but essential to designing useful objects. Complicated real-world objects are reduced to simple representations
+
+- **Encapsulation** Objects should group together related variables and functions and be in complete control over them. So the state of an object should only change, if ever, through the object itself. Also known as data hiding, because the object has sole responsibility for its fields, and no outside object or function should interfere
+
+- **Inheritance** Code reuse is an important principle of programming (DRY - Don't Repeat Yourself), and new classes can reuse code from existing ones. This establishes a superclass-subclass (or parent-child) relationship where the derived classes inherit (and sometimes change) fields and methods from its parent
+
+- **Polymorphism** With inheritance, an object of a derived class can be referenced as instances of its parent class. This provides flexibility when invoking inherited methods with varying implementations in derived classes. Also, even without inheritance, behavior in a class can change depending on the signature of the methods contained
+
+### Class Members: Fields, Constructors, Methods
+The state of a class/object is represented by its **fields**: these are references to the data that encompass the entity. These resources are what are used to represent your data in your code. **Constructors** are special **methods** that are called when you instantiate an object of a class. They share the name of their class and declare no return type. These methods are used to set initial values for the instantiated object of the class, perform any setup actions, or trigger actions upon object creation. Finally, classes have regular **methods**: repeatable code that is associated with the class/objects of the class
+```java
+public class Person{
+  // these are fields of the class
+  String name;
+  int age;
+
+  // this is a constructor: it requires a string and int that will be set for the fields of the object made
+  public Person(String name, int age){
+    // this.name is a reference to the field of the class
+    // name is a reference to the parameter
+    this.name = name;
+    this.age = age;
+  }
+
+  // this is a method: objects of the class can use it
+  public void giveGreeting(){
+    System.out.println("Hello there!");
+  }
+}
+```
+
+### Static Members
+Sometimes you will want members of a class (fields and methods) to belong to the class itself directly, instead of belonging to objects of the class. The **static** keyword can be used for both methods and fields in a class, which changes the **scope** of the resource. **Scope** in programming defines the accessibility of variables and methods. There are four main types of scope:
+- **Class/Static Scope**: Available to all instances of a class by invoking the class itself. The **static** keyword makes a variable class scope. Class scope methods/variables cannot interact with instance variables/methods
+- **Instance/Object Scope**: Available to the instance of an object, using the **this** keyword to interact with instance variables. Instance variables are unique per object and do not cross objects.
+- **Method Scope**: Available within the method it is instantiated in, and the variable no longer exists after the method is finished
+- **Block Scope**: Available within the `{}` it is instantiated in, usually used in control-flow statements
+``` java
+public class MyClass{
+
+    static int classCount = 0; // class scope: available to all myClass objects, should be referenced by the class directly
+    String objectName; // instance scope: each object of this class will have their own objectName field
+
+    public MyClass(String objectName){
+        int addOneToClass = 1; // method scope: only available within this method
+        MyClass.classCount += addOneToClass;
+        this.objectName = objectName;
+    }
+
+    public static void countClass(){
+        if (MyClass.classCount == 0){
+            int zero = 0; //block scope: only exists for the execution of this block of code
+            System.out.println(zero);            
+        } else {
+            System.out.println(myClass.classCount);
+        }
+    }
+}
+```
+
+### Polymorphism
+**Polymorphism** is the ability for the behavior of a class to take on many forms: the two ways this is achieved is through **Overloading** and **overriding**. **Overloading** is a form of **compile-time polymorphism** where multiple methods can share a name but have different parameters to distinguish them. This can be particularly useful if you need to perform a similar action on different types of data, but want a unified way of performing your action:
+```java
+// this prints the sum of the numbers
+public void combine(int num1, int num2){
+  System.out.println(num1 + num2);
+}
+// this concatenates the words provided
+public void combine(String word1, String word2){
+  System.out.println(word1 + word2);
+}
+```
+When **overloading** a method you can also change the declared return type
+
+**Overridding** is a form of **run-time polymorphism** where a child class changes the implementation of an inherited method. This is useful when a behavior is shared among many classes, but some of those classes require a unique implementation of the behavior:
+```java
+public class Vehicle{
+  public void drive(){
+    System.out.println("vroom vroom!");
+  }
+}
+
+public class Car extends Vehicle{}
+
+public class Truck extends Vehicle{}
+
+public class Bike extends Vehicle{
+  @override
+  public void drive(){
+    System.out.println("ding ding!");
+  }
+}
+```
+
+### Inheritance
+**Inheritance** is the ability for child resources, such as classes, to receive members from a parent resource, typically fields and methods. Regular classes can inherit from one other regular class using the **extends** keyword: Java does not support multiple class inheritance. Often, however, **abstract classes** and **interfaces** are used to facilitate **inheritance**
+
+#### Abstract Classes
+**Abstract classes** have two distinguishing differences from regular classes: objects can not be directly instantiated for **abstract classes**, and they are allowed to have **abstract methods**. Because **abstract classes** are meant to define shared resources they can not have objects of them directly made: they must be inherited by a child class and that class instantiated to gain access to the resources in the **abstract class**:
+```java
+public abstract class Vehicle{
+  public void drive(){
+    System.out.println("vroom vroom!");
+  }
+}
+
+public class Car extends Vehicle{}
+
+public class App{
+  public static void main(String[] args){
+    Car car = new Car();
+    car.drive(); // will print "vroom vroom!" to the terminal
+  }
+}
+```
+If a shared method needs to be defined, but each inheriting class needs to implement its own version of the method, an **abstract method** can be defined in an **abstract class**. There method definitions only include the access modifier, return type, and signature. Any class that inherits the **abstract method** is required to implement the method
+```java
+public abstract class Shape {
+    public double area;
+    public abstract double calculateArea();
+}
+
+public class Rectangle extends Shape {
+    private double width;
+    private double height;
+
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    @Override
+    public double calculateArea() {
+        area = width * height;
+        return area;
+    }
+}
+
+public class Triangle extends Shape {
+    private double base;
+    private double height;
+
+    public Triangle(double base, double height) {
+        this.base = base;
+        this.height = height;
+    }
+
+    @Override
+    public double calculateArea() {
+        area = 0.5 * base * height;
+        return area;
+    }
+}
+```
+
+#### Interfaces
+Classes can only directly inherit from one parent class, but often in large applications it will not make sense to store all the fields and methods child classes may need in a single parent. In situations where multiple resources are needed to define behavior **interfaces** should be used. **Interfaces** are like contracts for your classes: any class that **implements** an **interface** is "agreeing" to implement the abstract methods defined in the **interface**. By default, **interface** methods are public abstract, so only a return type and signature need to be defined. That being said, **interfaces** support two other kinds of methods: **default methods** and **static methods**. **Static methods** in **interfaces** work the same as in classes: they are called by referencing the **interface** and using the dot operator. **Default methods** allow you to define the implementation of a method in the **interface**, which can be overridden in the inheriting class if need be. Fields can also be defined in **Interfaces**, but they are public static final by default, so this should only be done for constant values expected to be used by the methods in the **interface**
+```java
+public interface Flyable{
+  void fly();
+}
+
+public interface Driveable{
+  void drive();
+}
+
+public class Vehicle{
+  public int gas;
+}
+
+public class Plane extends Vehicle implements Flyable, Driveable{
+  @override
+  public void drive(){
+    if(gas > 0){
+      System.out.println("VVVVVRRRRROOOOOOOOOOMMMMMMMM!");
+      gas--;
+    } else{
+      System.out.println("need to refuel the tanks");
+    }
+  }
+
+  @override
+  public void fly(){
+    if(gas > 0){
+      System.out.println("Please keep your seat belts buckled while the seat belt sign is on.");
+      gas--;
+    } else{
+      System.out.println("Please prepare for landing");
+    }
+  }
+}
+
+public class Car extends Vehicle implements Driveable{
+  @override
+  public void drive(){
+    if(gas > 0){
+      System.out.println("beep beep!");
+      gas--;
+    } else{
+      System.out.println("need to go to the gas station");
+    }
+  }
+}
+```
+
+### Encapsulation
+**Encapsulation** is the principle of containing related state and behavior together inside a class, and also hiding and preventing change to an object's data members by external resources. An object encapsulates or controls the access to its internal state, which prevents arbitrary external interference, which could bring the object into an invalid or inconsistent state. There are four access modifiers that can be applied to fields and methods:
+|modifier|access|
+|-------|-------|
+|public|anywhere|
+|protected|within same package and sub-classes|
+|default (no keyword)|within same package|
+|private|within same class|
+
+A common **encapsulation** practice is to mark all fields of a class private and use public **getter** and **setter** methods to control access to the fields. These **getter** and **setter** methods can be augmented to control the way the fields are accessed (preventing values from being assigned, performing calculations when a value changes, etc.)
+
+Classes can be labeled public or left default unless defined as an inner class, in which case they can be given any access modifier
+
+### Abstraction
+**Abstraction** is a key principle that allows developers to model real-world entities as classes and objects, focusing on the essential properties and behaviors while hiding the implementation details that are not relevant to the abstraction's purpose. **Abstraction** in OOP involves defining  clear and well-defined interfaces for interacting with objects.
+
+Think of a car: you don't need to know how the car works, just how to use the interfaces you are given, like the accelerator, brake, and steering wheel. A car **abstracts** away the internal details of the engine, motor, driveshaft, and other parts. Another example is, if an `Animal` class were part of a library for creating animals in Java, the user of the library wouldn't need to know exactly how each animal speaks, because the `speak` method is defined on the `Animal` class. We can also use the generic `Animal` type for reference variables without worrying about which specific animal the object is. Let's assume that the Dog and Cat class extend the Animal class. When creating an instance of a Dog, we will declare the corresponding reference variable to be of type `Animal`, not `Dog`. The advantage of writing code this way is that later, if we decide we instead need to create a `Cat` where the `Dog` was before, we can easily change the constructor being invoked. If we code with the abstract superclass in mind, which is `Animal`, then we know that we can have the animal use the `.speak()` method regardless of whether the object is a `Dog` or `Cat` because that behavior is guaranteed to exist for all animals
+
+#### Object Class
+All classes in Java inherit from the base **`Object`** class, either directly or indirectly. This class provides a collection of basic methods, such as `equals`, `toString`, `getClass`, and `hashCode`. These methods have a default implementation provided by the **`Object`** class, such as `equals` checking the memory location of the object calling it against the object passed as an argument, but these implementations can be overridden to better meet the needs of your classes. A few important methods provided by the `Object` class:
+- **toString**: returns a string representation of an object's state. The method returns the object's memory address by default, but is usually overridden to provide information such as field values
+- **hashCode**: returns a hash code value representing the object, used by hash-based data structures for storage and retrieval. This method is often overridden to be based off the state of the object instead of its identity (memory address)
+- **equals**: returns a boolean indicating whether two objects are the same. This method checks the memory location of the objects by default, but it is often overridden to be based off the fields of a class instead
+
+### Non-Access Modifiers
+The **static** keyword marks a method or variable as part of the class scope, meaning it belongs to the class itself rather than any instance of the class. The **final** keyword makes a variable unable to be reassigned a new value, a method incapable of being overridden, and a class incapable of being extended. The **abstract** keyword makes a class incapable of being instantiated and defines a method without any implementation, which must be handled elsewhere
+
+There are other important keywords as well. The **synchronized** keyword is relevant to threads and helps prevent deadlock phenomena. The **transient** keyword marks a variable as non-serializable, meaning it will not be persisted when written to a byte stream
+
+### Garbage Collection
+Whenever an object has no references it becomes eligible for **garbage collection**. One of the features of Java is automated memory management, and **garbage collection** is part of that management. The JVM handles this, and there is no way to force **garbage collection** to happen, but it can be request: one way of doing so is calling `System.gc`
+
+## Java Collections
+
+### Overview of Collection API (and Maps)
+![Collection API](CollectionHierarchy.png)
+
+Java's collections framework provides an API and reference implementations for common data structures:
+- ``add()``: This method is used to add or insert an element in the collection
+- ``addAll()``: This method adds a collection of elements to the collection. It returns true if the elements are added; otherwise, it returns false
+- ``clear()``: This method clears or removes all the elements from the collection
+- ``contains()``: It checks whether an element is present or not in a collection
+- ``containsAll()``: This method checks whether a specified collection of elements is present or not. It returns true if the calling collection contains all specified elements; otherwise, it returns false
+- ``isEmpty()``: It returns true if a collection is empty
+- ``iterator()``: It returns an iterator
+- ``remove()``: It removes a specified element from the collection
+- ``removeAll()``: The removeAll() method removes all elements from the collection. It returns true if all elements are removed; otherwise, it returns false.
+- ``retainAll()``: This method is used to remove all elements from the collection except the specified collection. It returns true if all the elements are removed; otherwise, it returns false.
+- ``size()``: The size() method returns the total number of elements in the collection. Its return type is an integer
+- ``toArray()``: It returns the elements of a collection in the form of an array. The array elements are copies of the collection elements
+
+#### Generics
+Java **generics** provide a mechanism for writing reusable and type-safe code in situations where you are not able to guarantee the type of data being worked with. By using generic types, developers can create methods, classes, and interfaces that can work with any type, while still providing type safety at compile-time. This improves code reuse and reduces the risk of runtime type-related errors
+
+With **generics**, developers can define a placeholder type parameter that acts as a **generic type**. This type parameter can be used in the method signature or class definition to specify the type of data that the method or class can work with. The diamond operator `<>` allows developers to specify the type for the compiler to enforce at compile-time
+
+By using generics, developers can avoid the need for type casting or type checking at runtime, reducing the risk of runtime type-related errors. Additionally, generics enable developers to write code that is more flexible and reusable, as they can easily adapt the code to work with different types without the need for code duplication. This is seen extensively in the Collection API
+
+### List
+A **List** is an ordered collection of elements. A user has the ability to place an element anywhere in the list, and those elements are accessible by their index (starting at 0). **Lists** allows for duplicate elements such that element1.equals(element2). In addition to duplicates, **List** allow for multiple null elements to be stored 
+
+#### ArrayList
+An **ArrayList** is a data structure which contains an array within it, but can resize dynamically. Once it reaches maximum capacity it will increase its size by copying its elements to a new larger, internal array. The main benefits of using an ArrayList in these cases are the ability to dynamically add and remove items, access items by index, and iterate over the contents easily
+
+#### LinkedList
+A LinkedList is a data structure that is internally composed of **nodes** that contain data and a reference to the next node. A **Doubly-Linked List** is composed of nodes that contain references to the next and previous node. Java’s implementation of a **LinkedList** implements both the **List** interface and the **Deque** interface, meaning it can act as either a list or a queue. The main advantages of a **LinkedList** are efficient insertion and deletion operations and the ability for it to be used as a foundation for stacks, queues, and other complex data structures
+
+|ArrayList |	LinkedList|
+| -------- | ------------ |
+|ArrayList internally uses a dynamic array to store the elements |	LinkedList internally uses a doubly linked list to store the elements |
+|Manipulation with ArrayList is slow because it internally uses an array. If any element is removed from the array, all the other elements are shifted in memory |	Manipulation with LinkedList is faster than ArrayList because of the use of nodes where you just need to change the nearest references of a node |
+|An ArrayList class can act as a list only because it implements List only	|LinkedList class can act as a list and queue because it implements List and Deque interfaces |
+|ArrayList is better for storing and accessing data |	LinkedList is better for manipulating data |
+|The memory location for the elements of an ArrayList are contiguous |	The location for the elements of a linked list are not contagious|
+
+### Set
+**Set** is a collection of non duplicate elements, meaning there will never exist a situation where element1.equals(element2). In addition to this, it is implied that there can only exist one null element due to the no duplicates rule. **Sets** do not guarantee order of insertion being maintained, but some implementations also use **SortedSet** for proper ordering
+
+#### HashSet
+A **HashSet** implements **Set** and is backed by a **HashMap**. It guarantees no ordering when iterating and allows one `null` value to be stored. It is fast at insertion and traversal, and does not maintain the order in which you insert elements
+
+#### TreeSet
+A **TreeSet** is a **Set** whose elements maintain sorted order when inserted. Internally, it is backed by a **Sorted Tree**. Insertion and removal of elements is slow, because the elements must maintain sorted order. It cannot contain any `null` values, since `null` cannot be compared to any object.
+
+| Category              | Hash Set                                      | Tree Set                                              |
+|-----------------------|-----------------------------------------------|-------------------------------------------------------|
+| Implementation        | Uses a hash table                             | Uses a tree structure                                 |
+| Null Object           | Allows null objects                           | Does not allow null objects (throws an exception)     |
+| Methods               | Uses `equals` method for comparison           | Uses `compare` method for comparison                  |
+| Heterogeneous Objects | Does not allow different types of objects     | Allows different types of objects                     |
+| Ordering              | Does not maintain any order                   | Maintains objects in sorted order                     |
+
+### Map
+**Map** is an interface which stores data with a key. A **map** cannot contain duplicate keys; each key can map to at most one value. **Map** can be visualized like a dictionary where only one word is paired with one definition. Unlike most other interfaces in the Collection Framework, it does not implement Collection or Iterable. Because it does not implement `Iterable` **Maps** cannot be iterated over directly
+
+#### HashMap
+**HashMap** is a Map that stores elements in key-value pairs: insertion/retrieval of element by key is fast, but the tradeoff is it does not maintain the order of insertion. Also, **HashMaps** only permit one null key
+
+#### TreeMap
+**TreeMap** is a Map whose keys are stored in a Sorted Tree structure. The main benefit is that keys are always in a sorted order, but insertion/retrievals are slow. These structures can not contain null keys since null can't be compared for sorting
+
+### Comparable vs Comparator
+**Comparable** is a functional interface used to define a **natural ordering** between instances of a class, commonly used by sorted collections such as TreeSet. **Comparator** is another functional interface used in a dedicated utility class that can compare two different instances passed to it. It can be passed to a sort method, such as Collections.sort() or Arrays.sort(), or to sorted collections.
+```java
+// Comparable example
+class Person implements Comparable<Person>{
+	int age;
+ 
+	Person(int age) {
+		this.age = age;
+	}
+ 
+ /*
+    the result of compareTo is used to determine ordering:
+    if a negative interger is returned the object calling the method is considered "lesser"
+    if 0 is returned the objects are equal
+    if a positive integer is returned the object calling the method is considered "greater"
+
+    this means the example below will order Person objects in descending order
+ */
+	@Override
+	public int compareTo(Person o) {
+		return o.age - this.age;
+	}
+}
+ 
+public static void main(String[] args) {
+	TreeSet<Person> persons = new TreeSet<Person>();
+	persons.add(new Person(43)); // no other objects in collection
+	persons.add(new Person(25)); // 25 is less than 43, so it will be second in the list
+	persons.add(new Person(111)); // 111 is greater than 43, so it will go first in the list
+  // final order of ages: 111, 43, 25
+}
+```
+#### Comparator
+```java
+class Person {
+	int age;
+ 
+	Person(int age) {
+		this.age = age;
+	}
+}
+ 
+class PersonAgeComparator implements Comparator<Person> {
+  // follows the same rules as compareTo
+	@Override
+	public int compare(Person a, Person b) {
+		return a.age - b.age;
+	}
+}
+ 
+public static void main(String[] args) {
+  // note the PersonAgeComparator being provided to the TreeSet
+	TreeSet<Person> persons = new TreeSet<Person>(new PersonAgeComparator());
+	persons.add(new Person(43));
+	persons.add(new Person(25));
+	persons.add(new Person(111));
+}
+```
