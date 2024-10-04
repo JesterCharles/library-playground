@@ -84,6 +84,9 @@ public class CaseConverter {
             if(Character.isUpperCase(variable.charAt(index))){
                 variable.insert(index,"_");
                 indexes.add(index);
+                // since we are adding the underscore before the uppercase letter, the next character will be the uppercase letter
+                // so we need to increase the value of index manually to avoid an infinite loop
+                index++;
             }
         }
         return indexes;
