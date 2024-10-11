@@ -16,6 +16,8 @@ public class Author {
         this.birthDate = birthDate;
     }
 
+    public Author(){}
+
     // Getters and Setters
     public int getAuthorId() {
         return authorId;

@@ -20,6 +20,8 @@ public class Book {
         this.checkedOutBy = checkedOutBy;
     }
 
+    public Book(){}
+
     // Getters and Setters
     public int getBookId() {
         return bookId;

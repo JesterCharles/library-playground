@@ -1,14 +1,31 @@
 package com.revature.LibraryApp;
 
 
+import com.revature.LibraryApp.controllers.MemberController;
+import com.revature.LibraryApp.daos.MemberDao;
+import com.revature.LibraryApp.services.MemberService;
 import io.javalin.Javalin;
+import io.javalin.json.JavalinJackson;
 
 public class LibraryAppFrontController {
 
     public static void main(String[] args) {
-        var app = Javalin.create(/*config*/)
-                .get("/", ctx -> ctx.result("Hi Mom"))
-                .get("/hello", ctx -> ctx.result("Hello World"))
-                .start(7070);
+        Javalin app = Javalin.create(config -> {
+                    config.jsonMapper(new JavalinJackson());
+                })
+                .get("/", ctx -> ctx.result("Welcome to the Local Library App"));
+
+        // Create all of our necessary classes to interact with the Member features for our API
+        // DI - Dependency Injection -  required objects that should be available to the class at instantiation, necessary for feature functionality
+        MemberDao memberDao = new MemberDao();
+        MemberService memberService = new MemberService(memberDao);
+        MemberController memberController = new MemberController(memberService);
+
+        app.get("/members", ctx -> {
+            ctx.json(memberController.getAllMembers());
+            ctx.status(200);
+        });
+                // The last step in our FrontController is to start the server
+                app.start(8080);
     }
 }
