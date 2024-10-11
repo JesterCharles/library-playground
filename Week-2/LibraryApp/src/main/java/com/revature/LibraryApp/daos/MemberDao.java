@@ -18,4 +18,25 @@ public class MemberDao {
     public List<Member> findAll() {
         return members;
     }
+
+    public Member create(Member member) {
+        members.add(member);
+        return member;
+    }
+
+    public Member update(Member member) {
+        for (Member memberCheck:members){
+            if(memberCheck.getMemberId() == member.getMemberId()){
+                memberCheck.setName(member.getName());
+                memberCheck.setEmail(member.getEmail());
+                memberCheck.setPassword(member.getPassword());
+                return memberCheck;
+            }
+        }
+        return null;
+    }
+
+    public boolean delete(int memberId) {
+        return members.removeIf(member -> member.getMemberId() == memberId);
+    }
 }
