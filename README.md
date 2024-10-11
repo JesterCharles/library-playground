@@ -21,6 +21,7 @@ Here are the two branches to reference too from your course Repo to reflect on h
 1. Open git bash or powershell to clone the repo and execute the following command:
 ```bash
 git clone https://github.com/JesterCharles/library-playground.git
+cd library-playground/
 ```
 2. Execute the following command to make your own branch, using the initials of your teammates.
 ```bash
